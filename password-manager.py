@@ -4,7 +4,7 @@ import os
 #---------Initialization--------#
 #-------------------------------#
 
-# file = open("database.csv","x")
+file = open("database.csv", "w")
 
 #-------------------------------#
 #------------Classes------------#
@@ -61,7 +61,11 @@ def add_account():
         password = input('>> ')
         print(f'\n{name} account has been added successfully')
         acc = account(name, username, password)
-        database.append(acc)  
+        database.append(acc)
+        
+        file.write(database)
+
+        file.close()
         
     else:
         print(f'\n{name} already exist')
