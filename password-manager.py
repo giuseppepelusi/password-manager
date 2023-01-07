@@ -1,10 +1,4 @@
-import os 
-
-#-------------------------------#
-#---------Initialization--------#
-#-------------------------------#
-
-file = open("database.csv", "w")
+import os
 
 #-------------------------------#
 #------------Classes------------#
@@ -29,6 +23,29 @@ class account:
 #-----------Functions-----------#
 #-------------------------------#
             
+def load():
+    database = []
+    
+    try:
+        file = open("database.csv", "r")
+        
+    except:
+        pass
+    
+    else:
+        db = file.read()
+        db = db.split("\n")
+        
+        for row in db:
+            acc = row.split(",")
+            if len(acc) == 3:
+                acc = account(acc[0], acc[1], acc[2])
+                database.append(acc)
+                
+        file.close()
+    
+    return database
+        
 def print_menu():
     print(
 """
@@ -63,8 +80,15 @@ def add_account():
         acc = account(name, username, password)
         database.append(acc)
         
-        file.write(database)
-
+        db = ""
+        
+        for acc in database:
+            db = db + acc.name + "," + acc.username + "," + acc.password + "\n"
+        
+        file = open("database.csv", "w")
+        
+        file.write(db)
+        
         file.close()
         
     else:
@@ -86,6 +110,17 @@ def remove_account():
         
     else:
         print(f'\n{acc_name} account has been deleted successfully')
+        
+        db = ""
+        
+        for acc in database:
+            db = db + acc.name + "," + acc.username + "," + acc.password + "\n"
+        
+        file = open("database.csv", "w")
+        
+        file.write(db)
+        
+        file.close()
 
 def edit_account():
     print('Insert account name: ')
@@ -107,12 +142,23 @@ def edit_account():
                 acc.password = edited_password
                 
             break
-        
+    
     if not found:
         print(f'\nNo {acc_name} account has been found')
         
     else:
         print(f'\n{acc_name} account has been edited successfully')
+        
+        db = ""
+        
+        for acc in database:
+            db = db + acc.name + "," + acc.username + "," + acc.password + "\n"
+        
+        file = open("database.csv", "w")
+        
+        file.write(db)
+        
+        file.close()
 
 def print_account():
     pass
@@ -130,14 +176,21 @@ def print_account():
         print(f'\nNo {acc_name} account has been found')
 
 def print_all():
+    found = False
+    if len(database) != 0:
+        found = True
+    
     for acc in database:
         print(acc)
+        
+    if not found:
+        print('\nNo account has been found')
 
 #-------------------------------#
 #-------------Start-------------#
 #-------------------------------#
-    
-database = []
+
+database = load()
 
 while True:
     print_menu()
@@ -146,6 +199,8 @@ while True:
     i = input('>> ')
         
     if i == '0':
+        os.system("cls||clear")
+        print("Password-manager closed.\n")
         break
     
     elif i == '1':
